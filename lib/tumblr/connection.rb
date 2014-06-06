@@ -7,6 +7,9 @@ module Tumblr
 
     def connection(options={})
       host = api_host
+      
+      options = options.clone
+      
       default_options = {
         :headers => {
           :accept => 'application/json',
@@ -14,6 +17,9 @@ module Tumblr
         },
         :url => "http://#{host}/"
       }
+      
+      client = options.delete(:client) || Faraday.default_adapter
+      
       Faraday.new("http://#{host}/", default_options.merge(options)) do |builder|
         data = { :api_host => host }.merge(credentials)
         unless credentials.empty?
